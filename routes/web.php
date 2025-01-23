@@ -32,12 +32,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/get-list-of-offices', [OfficeController::class, 'index']);
     Route::get('get-list-of-sub-offices', [OfficeController::class, 'getSubOffices']);
     Route::get('/get-list-of-labels', [LabelController::class, 'index']);
-
-    Route::get('/test-storage-url', function () {
-        $fileUrl = Storage::url('accomplishments/m8hoydRWf6bT8EEQT3RBnlJwPOBLy4VUS62iAXKa.pdf');
-        return $fileUrl;
-    });
-
     // Post
     Route::post('add-new-accomplishment', [AccomplishmentController::class, 'store']);
     // Profile information
