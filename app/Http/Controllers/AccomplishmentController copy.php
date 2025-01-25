@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Accomplishment;
-use App\Models\Label;
 use App\Models\Office;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -68,8 +67,10 @@ class AccomplishmentController extends Controller
                 )
                 ->orderBy('week_ending_date', 'desc')
                 ->get();
-            // dd($accomplishments);
+
             return inertia('Reports', ['accomplishments' => $accomplishments]);
+
+            dd($accomplishments);
         } catch (\Exception $e) {
             Log::error('Error fetching accomplishments: ' . $e->getMessage());
             return response()->json(['error' => 'Error fetching staff'], 500);
@@ -92,16 +93,7 @@ class AccomplishmentController extends Controller
      */
     public function create()
     {
-        try {
-            $labels = Label::select('name')
-                ->orderBy('name', 'asc')
-                ->get();
-
-            return inertia('Accomplishments/Create', ['labels' => $labels]);
-        } catch (\Exception $e) {
-            Log::error('Error fetching labels: ' . $e->getMessage());
-            return response()->json(['error' => 'Error fetching labels'], 500);
-        }
+        //
     }
 
     /**
@@ -110,6 +102,7 @@ class AccomplishmentController extends Controller
     public function store(Request $request)
     {
         try {
+
             $validatedData = $request->validate([
                 'week_ending_date' => 'required|date|date_format:Y-m-d',
                 'accomplishments_this_week' => 'required|string|max:2000',
@@ -138,7 +131,7 @@ class AccomplishmentController extends Controller
                 'label' => $validatedData['label'] ?? null
             ]);
 
-            return redirect(route('reports.index'))->with('success', 'Accomplishment created successfully.');
+            return response()->json(['message' => 'Accomplishment added successfully']);
         } catch (\Exception $e) {
             Log::error('Error creating Accomplishment: ' . $e->getMessage());
             return response()->json(['error' => 'Error creating Accomplishment'], 500);

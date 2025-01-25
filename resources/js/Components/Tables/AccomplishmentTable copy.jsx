@@ -6,6 +6,7 @@ import 'datatables.net-dt/css/dataTables.dataTables.min.css';
 import 'datatables.net-responsive-dt'
 import 'datatables.net-dt';
 import { usePage } from '@inertiajs/react';
+import { root } from 'postcss';
 
 const Loader = React.lazy(() => import('../Loader'));
 
@@ -76,21 +77,22 @@ export default function AccomplishmentTable({ user_role, accomplishments, select
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // const fetchData = async () => {
-    //     setLoading(true);
-    //     try {
-    //         const response = await axios.get('/get-list-of-accomplishments', {
-    //             params: { user_role, selectedOffice }
-    //         });
-    //         setData(response.data);
-    //     } catch (error) {
-    //         console.error(error);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // }
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get('/get-list-of-accomplishments', {
+                params: { user_role, selectedOffice }
+            });
+            setData(response.data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     useEffect(() => {
+        fetchData();
         return () => {
             if ($.fn.DataTable.isDataTable('#accomplishments-table')) {
                 $('#accomplishments-table').DataTable().destroy();
@@ -99,11 +101,11 @@ export default function AccomplishmentTable({ user_role, accomplishments, select
     }, [refresh, user_role, selectedOffice]);
 
     useEffect(() => {
-        if (accomplishments.length > 0) {
+        if (data.length > 0) {
             const table = $('#accomplishments-table').DataTable({
                 destroy: true,
                 responsive: true,
-                data: accomplishments,
+                data: data,
                 columns: [
                     {
                         className: 'details-control',
@@ -178,7 +180,7 @@ export default function AccomplishmentTable({ user_role, accomplishments, select
                     </tr>
                 </thead>
             </table >
-            {accomplishments.length === 0 && (
+            {data.length === 0 && (
                 <div className='flex justify-center items-center bg-gray-100 dark:bg-gray-800'>
                     <p className='text-gray-600 dark:text-gray-400'>No Accomplishments</p>
                 </div>

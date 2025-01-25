@@ -1,18 +1,24 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
+import Loader from '@/Components/Loader';
 import NavLink from '@/Components/NavLink';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function AuthenticatedLayout({ header, children }) {
 
     const user = usePage().props.auth.user;
     const [isSideBarOpen, setIsSideBarOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const toggleSideBar = () => {
         setIsSideBarOpen(!isSideBarOpen);
     }
+
+    useEffect(() => {
+        setTimeout(() => {
+            setLoading(false);
+        }, 500);
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex">
@@ -31,9 +37,9 @@ export default function AuthenticatedLayout({ header, children }) {
                     <h2 className='text-2xl font-bold mt-12'>Menu</h2>
                     <ul className='mt-4 space-y-2 flex flex-col items-center'>
                         <li>
-                            <NavLink href={route('dashboard')} active={route().current('dashboard')}>
+                            <NavLink href={route('dashboard.index')} active={route().current('dashboard.index')}>
                                 <span className='flex flex-col items-center'>
-                                    {route().current('dashboard') ? (
+                                    {route().current('dashboard.index') ? (
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
                                             <path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75ZM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 0 1-1.875-1.875V8.625ZM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 0 1 3 19.875v-6.75Z" />
                                         </svg>
@@ -47,9 +53,9 @@ export default function AuthenticatedLayout({ header, children }) {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink href={route('reports')} active={route().current('reports')}>
+                            <NavLink href={route('reports.index')} active={route().current('reports.index')}>
                                 <span className='flex flex-col items-center'>
-                                    {route().current('reports') ? (
+                                    {route().current('reports.index') ? (
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
                                             <path fillRule="evenodd" d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625ZM7.5 15a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 15Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H8.25Z" clipRule="evenodd" />
                                             <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
@@ -65,9 +71,9 @@ export default function AuthenticatedLayout({ header, children }) {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink href={route('settings')} active={route().current('settings')}>
+                            <NavLink href={route('settings.index')} active={route().current('settings.index')}>
                                 <span className='flex flex-col items-center'>
-                                    {route().current('settings') ? (
+                                    {route().current('settings.index') ? (
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
                                             <path fillRule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 0 0-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 0 0-2.282.819l-.922 1.597a1.875 1.875 0 0 0 .432 2.385l.84.692c.095.078.17.229.154.43a7.598 7.598 0 0 0 0 1.139c.015.2-.059.352-.153.43l-.841.692a1.875 1.875 0 0 0-.432 2.385l.922 1.597a1.875 1.875 0 0 0 2.282.818l1.019-.382c.115-.043.283-.031.45.082.312.214.641.405.985.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.344-.165.673-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 0 0 2.28-.819l.923-1.597a1.875 1.875 0 0 0-.432-2.385l-.84-.692c-.095-.078-.17-.229-.154-.43a7.614 7.614 0 0 0 0-1.139c-.016-.2.059-.352.153-.43l.84-.692c.708-.582.891-1.59.433-2.385l-.922-1.597a1.875 1.875 0 0 0-2.282-.818l-1.02.382c-.114.043-.282.031-.449-.083a7.49 7.49 0 0 0-.985-.57c-.183-.087-.277-.227-.297-.348l-.179-1.072a1.875 1.875 0 0 0-1.85-1.567h-1.843ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z" clipRule="evenodd" />
                                         </svg>
@@ -93,7 +99,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             <div className='flex'>
                                 <button
                                     onClick={toggleSideBar}
-                                    className='text-gray-800 dark:text-gray-200 lg:hidden'
+                                    className='text-gray-800 dark:text-gray-200 lg: hidden'
                                 >
                                     {isSideBarOpen ? (
                                         <span>
@@ -151,7 +157,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             </div>
                         </header>
                     )}
-                    <main>{children}</main>
+                    <main>{loading ? <Loader /> : children}</main>
                 </div>
             </div>
         </div>
