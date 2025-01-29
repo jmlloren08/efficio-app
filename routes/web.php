@@ -4,6 +4,7 @@ use App\Http\Controllers\AccomplishmentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LabelController;
 use App\Http\Controllers\OfficeController;
+use App\Http\Controllers\OllamaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StaffController;
@@ -26,6 +27,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/auth/verified/users', UserController::class);
     Route::resource('/auth/verified/offices', OfficeController::class);
     Route::resource('/auth/verified/labels', LabelController::class);
+
+    Route::post('/get-ollama-response', [OllamaController::class, 'getOllamaResponse']);
     
     // Profile information
     Route::get('/auth/verified/profile', [ProfileController::class, 'edit'])->name('profile.edit');

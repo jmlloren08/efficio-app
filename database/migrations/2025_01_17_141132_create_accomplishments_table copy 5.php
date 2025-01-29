@@ -18,8 +18,12 @@ return new class extends Migration
             $table->date('week_ending_date');
             $table->text('accomplishments_this_week');
             $table->text('action_items_next_week');
+            $table->decimal('planned_hours_worked', 8, 2)->default(0.00);
+            $table->decimal('actual_hours_worked', 8, 2)->default(0.00);
+            $table->boolean('need_help')->default(false);
             $table->text('issues_or_concerns');
             $table->text('attachments')->nullable();
+            $table->enum('attachment_type', ['file', 'link'])->nullable();
             $table->string('label')->nullable();
             $table->timestamps();
         });

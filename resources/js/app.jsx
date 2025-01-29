@@ -19,5 +19,10 @@ createInertiaApp({
 
         root.render(<App {...props} />);
     },
-    progress: false,
+    progress: {
+        color: 'blue',
+        style: {
+            linearGradient: 'to right, blue, white',
+        },
+    },
 });

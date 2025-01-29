@@ -31,9 +31,9 @@ export default function Reports({ accomplishments }) {
                         {['Staff', 'Division Chief', 'Director', 'Undersecretary', 'Secretary'].includes(user.user_role) && (
                             <Link
                                 href={route('reports.create')}
-                                className='px-4 py-2 font-semibold bg-blue-500 text-white rounded hover:bg-blue-700'
+                                className='px-4 py-2 text-sm font-semibold bg-blue-500 text-white rounded hover:bg-blue-700'
                             >
-                                Add new accomplishment
+                                Create
                             </Link>
                         )}
                         <div className='mt-6 overflow-x-auto'>

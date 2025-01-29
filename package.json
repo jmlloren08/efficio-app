@@ -25,6 +25,7 @@
         "datatables.net-dt": "^2.2.1",
         "datatables.net-react": "^1.0.0",
         "datatables.net-responsive-dt": "^3.0.3",
+        "marked": "^15.0.6",
         "react-apexcharts": "^1.7.0",
         "react-quill": "^2.0.0",
         "react-toastify": "^11.0.3"

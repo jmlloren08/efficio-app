@@ -6,7 +6,7 @@ import 'datatables.net-dt/css/dataTables.dataTables.min.css';
 import 'datatables.net-responsive-dt'
 import 'datatables.net-dt';
 import { usePage } from '@inertiajs/react';
-import { root } from 'postcss';
+import AttachmentLinks from '../AttachmentLinks';
 
 const Loader = React.lazy(() => import('../Loader'));
 
@@ -19,29 +19,7 @@ const ViewIcon = () => (
     </span>
 );
 
-const AttachmentLinks = ({ attachments }) => {
-    const safeAttachments = Array.isArray(attachments) ? attachments : attachments ? [attachments] : [];
-    return (
-        <div className='flex flex-rows items-center'>
-            {safeAttachments.length > 0 ? (
-                safeAttachments.map((attachment, index) => (
-                    <a
-                        key={index}
-                        href={`/storage/${attachment}`}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className='inline-block m-1 text-gray-600 hover:text-blue-500'
-                        title='View attachment'
-                    >
-                        <ViewIcon />
-                    </a>
-                ))
-            ) : (
-                'No attachments'
-            )}
-        </div>
-    );
-};
+
 
 const DetailsContent = ({ rowData }) => (
     <div className='details-content text-xs'>
@@ -77,22 +55,7 @@ export default function AccomplishmentTable({ user_role, accomplishments, select
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const fetchData = async () => {
-        setLoading(true);
-        try {
-            const response = await axios.get('/get-list-of-accomplishments', {
-                params: { user_role, selectedOffice }
-            });
-            setData(response.data);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-    }
-
     useEffect(() => {
-        fetchData();
         return () => {
             if ($.fn.DataTable.isDataTable('#accomplishments-table')) {
                 $('#accomplishments-table').DataTable().destroy();
@@ -101,11 +64,11 @@ export default function AccomplishmentTable({ user_role, accomplishments, select
     }, [refresh, user_role, selectedOffice]);
 
     useEffect(() => {
-        if (data.length > 0) {
+        if (accomplishments.length > 0) {
             const table = $('#accomplishments-table').DataTable({
                 destroy: true,
                 responsive: true,
-                data: data,
+                data: accomplishments,
                 columns: [
                     {
                         className: 'details-control',
@@ -180,7 +143,7 @@ export default function AccomplishmentTable({ user_role, accomplishments, select
                     </tr>
                 </thead>
             </table >
-            {data.length === 0 && (
+            {accomplishments.length === 0 && (
                 <div className='flex justify-center items-center bg-gray-100 dark:bg-gray-800'>
                     <p className='text-gray-600 dark:text-gray-400'>No Accomplishments</p>
                 </div>
