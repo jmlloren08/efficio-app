@@ -7,12 +7,8 @@ use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\OllamaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
-use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UserController;
-use App\Models\Dashboard;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -29,7 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/auth/verified/labels', LabelController::class);
 
     Route::post('/get-ollama-response', [OllamaController::class, 'getOllamaResponse']);
-    
+    Route::get('/check-ollama-result/{requestId}', [OllamaController::class, 'checkOllamaResult']);
     // Profile information
     Route::get('/auth/verified/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/auth/verified/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -1,5 +1,4 @@
 import Dropdown from '@/Components/Dropdown';
-import Loader from '@/Components/Loader';
 import NavLink from '@/Components/NavLink';
 import { Link, usePage } from '@inertiajs/react';
 import React, { useEffect, useState } from 'react';
@@ -8,17 +7,10 @@ export default function AuthenticatedLayout({ header, children }) {
 
     const user = usePage().props.auth.user;
     const [isSideBarOpen, setIsSideBarOpen] = useState(false);
-    const [loading, setLoading] = useState(true);
 
     const toggleSideBar = () => {
         setIsSideBarOpen(!isSideBarOpen);
     }
-
-    useEffect(() => {
-        setTimeout(() => {
-            setLoading(false);
-        }, 500);
-    }, []);
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex">
@@ -156,7 +148,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             </div>
                         </header>
                     )}
-                    <main>{loading ? <Loader /> : children}</main>
+                    <main>{children}</main>
                 </div>
             </div>
         </div>

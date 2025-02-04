@@ -16,9 +16,7 @@ class AccomplishmentController extends Controller
     public function index(Request $request)
     {
         try {
-
             $accomplishments = $this->fetchAccomplishments($request);
-
             return inertia('Reports', ['accomplishments' => $accomplishments]);
         } catch (\Exception $e) {
             Log::error('Error fetching accomplishments: ' . $e->getMessage());
@@ -31,13 +29,10 @@ class AccomplishmentController extends Controller
     public function create(Request $request)
     {
         try {
-
             $accomplishments = $this->fetchAccomplishments($request);
-
             $labels = Label::select('name')
                 ->orderBy('name', 'asc')
                 ->get();
-
             return inertia('Accomplishments/Create', [
                 'labels' => $labels,
                 'accomplishments' => $accomplishments
@@ -47,7 +42,6 @@ class AccomplishmentController extends Controller
             return response()->json(['error' => 'Error fetching labels'], 500);
         }
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -66,12 +60,10 @@ class AccomplishmentController extends Controller
                 'attachment_type' => 'required|string|in:file,link',
                 'label' => 'required|string|max:255'
             ]);
-
             $attachmentPath = null;
             if ($request->hasFile('attachments')) {
                 $attachmentPath = $request->file('attachments')->store('accomplishments', 'public');
             }
-
             Accomplishment::create([
                 'user_id' => auth()->user()->id,
                 'week_ending_date' => $validatedData['week_ending_date'],
@@ -85,14 +77,12 @@ class AccomplishmentController extends Controller
                 'attachment_type' => $validatedData['attachment_type'] ?? null,
                 'label' => $validatedData['label'] ?? null
             ]);
-
             return redirect(route('reports.create'))->with('success', "Well done! You've successfully submitted an accomplishment.");
         } catch (\Exception $e) {
             Log::error('Error creating Accomplishment: ' . $e->getMessage());
             return redirect(route('reports.index'))->with('error', "Error creating accomplishment: " . $e->getMessage());
         }
     }
-
     /**
      * Display the specified resource.
      */
@@ -100,7 +90,6 @@ class AccomplishmentController extends Controller
     {
         //
     }
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -108,7 +97,6 @@ class AccomplishmentController extends Controller
     {
         //
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -116,7 +104,6 @@ class AccomplishmentController extends Controller
     {
         //
     }
-
     /**
      * Remove the specified resource from storage.
      */
@@ -127,7 +114,6 @@ class AccomplishmentController extends Controller
     private function fetchAccomplishments(Request $request)
     {
         try {
-
             $user = $request->user();
             $officeId = $user->office_id;
             $userRole = $user->user_role;
@@ -179,10 +165,11 @@ class AccomplishmentController extends Controller
                     'issues_or_concerns',
                     'attachments',
                     'label',
+                    'updated_at',
                     'user_id'
                 )
-                ->orderBy('week_ending_date', 'desc')
-                ->get();
+                ->latest('week_ending_date')
+                ->paginate(10);
         } catch (\Exception $e) {
             Log::error('Error fetching accomplishments: ' . $e->getMessage());
             return response()->json(['error' => 'Error fetching accomplishments'], 500);

@@ -16,24 +16,62 @@ export default function Settings() {
     const [response, setResponse] = useState('');
     const [loading, setLoading] = useState(false);
     const [formatResponse, setFormatResponse] = useState('');
+    const [requestId, setRequestId] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await axios.post('/get-ollama-response', { query: input });
-            setResponse(response.data.message);
+            // Send request to the backend
+            const res = await axios.post('/get-ollama-response', { query: input });
+            if (res.data.message === 'Your request is being processed. Please wait...') {
+                setRequestId(res.data.request_id); // Save the request id for polling
+                pollForResult(res.data.request_id); // Start polling for the result
+            } else {
+                setResponse(res.data.message); // Handle immediate response (if any)
+            }
         } catch (error) {
-            setResponse(error.response?.data?.message);
-        } finally {
-            setLoading(false);
+            setResponse(error.response?.data?.message || 'An error occured');
         }
+    }
+
+    const pollForResult = async (requestId) => {
+        let attempts = 0;
+        const maxAttempts = 20;
+        const interval = 10000; // 10 seconds
+
+        const checkResult = async () => {
+            if (attempts >= maxAttempts) {
+                console.error('Max polling attempts reached.');
+                clearInterval(polling);
+                setResponse('No response received. Please try again later.');
+                setLoading(false);
+                return;
+            }
+            try {
+                console.log(`Polling attempt #${attempts + 1} for requestId: ${requestId}`);
+                // Check the status of the request
+                const res = await axios.get(`/check-ollama-result/${requestId}`);
+                if (res.data.status === 'completed') {
+                    clearInterval(polling); // Stop polling
+                    setResponse(res.data.response); // Set the response
+                    setLoading(false);
+                    console.log('Response received: ', res.data.response);
+                }
+            } catch (error) {
+                console.error('Error polling for result:', error);
+            }
+            attempts++;
+        }
+        const polling = setInterval(checkResult, interval);
     }
 
     useEffect(() => {
         if (response) {
             const formatted = formattedResponse(response); // Format the response
             setFormatResponse(formatted);
+        } else {
+            setFormatResponse(response);
         }
     }, [response]);
 
